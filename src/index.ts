@@ -40,7 +40,7 @@ export default function(api: IApi) {
       console.log(error);
       console.error('umi-plugin-core-preset 需要安装 @sensoro/core 才可运行');
     }
-    return true;
+    return false;
   }
 
   const { core = {}, qiankun = { master: {} } } = api.userConfig;
