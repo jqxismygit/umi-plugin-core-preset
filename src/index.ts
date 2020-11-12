@@ -1,22 +1,9 @@
 import { join } from 'path';
 import { IApi } from '@umijs/types';
 import { utils } from 'umi';
+import { getContet } from './utils';
+
 const DIR_NAME = 'plugin-core-preset';
-
-const CorePresetSlaveContent = `
-import React from 'react';
-import { useCoreState } from '@sensoro/core';
-
-export default (props) => {
-  const {children} = props;
-  const running = useCoreState();
-  return (
-    <>
-      {running && children}
-    </>
-  );
-};
-`;
 
 export default function(api: IApi) {
   api.logger.info('use core-preset plugin');
@@ -27,14 +14,29 @@ export default function(api: IApi) {
       schema(joi) {
         return joi.object({
           disable: joi.boolean(),
+          dictionary: joi.array().items(joi.string()),
         });
       },
     },
   });
 
+  api.addDepInfo(() => {
+    const pkg = require('../package.json');
+    console.log(api.pkg);
+    return [
+      {
+        name: '@sensoro/core',
+        range:
+          api.pkg.dependencies?.['@sensoro/core'] ||
+          api.pkg.devDependencies?.['@sensoro/core'] ||
+          pkg.peerDependencies['@sensoro/core'],
+      },
+    ];
+  });
+
   function haveCorePackage() {
     try {
-      require.resolve('@sensoro/core');
+      // require.resolve('@sensoro/core');
       return true;
     } catch (error) {
       console.log(error);
@@ -44,14 +46,17 @@ export default function(api: IApi) {
   }
 
   const { core = {}, qiankun = { master: {} } } = api.userConfig;
-  const { disable } = core;
+  const { disable, dictionary = [] } = core;
+
+  console.log(dictionary);
+
   if (qiankun) {
     if (haveCorePackage() && !disable) {
       if (qiankun.slave) {
         api.onGenerateFiles(() => {
           api.writeTmpFile({
             path: join(DIR_NAME, 'index.tsx'),
-            content: CorePresetSlaveContent,
+            content: getContet(JSON.stringify(dictionary)),
           });
         });
 
