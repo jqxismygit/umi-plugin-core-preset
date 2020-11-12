@@ -1,7 +1,7 @@
 {
   "name": "umi-plugin-core-preset",
   "main": "lib/index.js",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "use @sensoro/core",
   "authors": {
     "name": "king",
