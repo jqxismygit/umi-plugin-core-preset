@@ -2,6 +2,7 @@ import { join } from 'path';
 import { IApi } from '@umijs/types';
 import { utils } from 'umi';
 import { getContet } from './utils';
+import { readFileSync } from 'fs';
 
 const DIR_NAME = 'plugin-core-preset';
 
@@ -86,11 +87,22 @@ export default function(api: IApi) {
                 content: `
                 if(window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__){
                   window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ += "${trimPath}";
-                  __webpack_public_path__ = window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__;
                 }
                 `,
               },
             ];
+          });
+
+          api.addRuntimePlugin(() => `@@/${DIR_NAME}/dynamic-import-plugin`);
+
+          api.onGenerateFiles(() => {
+            api.writeTmpFile({
+              path: `${DIR_NAME}/dynamic-import-plugin.ts`,
+              content: readFileSync(
+                join(__dirname, 'dynamic-import-plugin.ts.tpl'),
+                'utf-8',
+              ),
+            });
           });
         }
       }
