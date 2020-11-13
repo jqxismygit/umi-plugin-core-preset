@@ -45,7 +45,12 @@ export default function(api: IApi) {
     return false;
   }
 
-  const { core = {}, qiankun = { master: {} }, dynamicImport, publicPath } = api.userConfig;
+  const {
+    core = {},
+    qiankun = { master: {} },
+    dynamicImport,
+    publicPath,
+  } = api.userConfig;
   const { disable, dictionary = [] } = core;
 
   console.log(dictionary);
@@ -75,13 +80,17 @@ export default function(api: IApi) {
         //如果是动态加载
         if (!!dynamicImport && !!publicPath) {
           const trimPath = publicPath.slice(1);
-          api.addEntryCodeAhead(() => {
-            return `
-              if(window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__){
-                window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ += "${trimPath}";
-                console.log(window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__);
-              }
-            `
+          api.addHTMLHeadScripts(() => {
+            return [
+              {
+                content: `
+                if(window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__){
+                  window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__ += "${trimPath}";
+                  console.log(window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__);
+                }
+                `,
+              },
+            ];
           });
         }
       }
