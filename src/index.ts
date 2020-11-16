@@ -78,25 +78,6 @@ export default function(api: IApi) {
           ];
         });
 
-        //支持在路由里面直接配置其他模块的组件(这里先放这个插件里面，后续如果有特殊情况可以拆分出去作为一个单独的插件)
-        api.modifyRoutes(routes => {
-          const patchRouters = (routes: IRoute[] = []) => {
-            if (routes && routes.length > 0) {
-              routes.forEach(route => {
-                if (route.component) {
-                  const index = route.component.indexOf('@sensoro/');
-                  if (index > -1) {
-                    route.component = route.component.slice(index);
-                  }
-                }
-                patchRouters(route.routes);
-              });
-            }
-          };
-          patchRouters(routes);
-          return routes;
-        });
-
         //如果是动态加载
         if (!!dynamicImport && !!publicPath) {
           const trimPath = publicPath.slice(1);
