@@ -16,6 +16,8 @@ export default function(api: IApi) {
         return joi.object({
           disable: joi.boolean(),
           dictionary: joi.array().items(joi.string()),
+          //子模块是否开启loading
+          disableLoading: joi.boolean(),
         });
       },
     },
@@ -52,13 +54,25 @@ export default function(api: IApi) {
     dynamicImport,
     publicPath,
   } = api.userConfig;
-  const { disable, dictionary = [] } = core;
+  const { disable, dictionary = [], disableLoading = false } = core;
 
   console.log(dictionary);
 
   if (qiankun) {
     if (haveCorePackage() && !disable) {
       if (qiankun.slave) {
+        if (!disableLoading) {
+          api.addRuntimePlugin(() => `@@/${DIR_NAME}/app-loading-plugin`);
+          api.onGenerateFiles(() => {
+            api.writeTmpFile({
+              path: `${DIR_NAME}/app-loading-plugin.ts`,
+              content: readFileSync(
+                join(__dirname, 'app-loading-plugin.ts.tpl'),
+                'utf-8',
+              ),
+            });
+          });
+        }
         api.onGenerateFiles(() => {
           api.writeTmpFile({
             path: join(DIR_NAME, 'index.tsx'),
