@@ -1,7 +1,7 @@
 export function getContet(dictionary: string) {
   return `
 import React from 'react';
-import { useCoreState, useRequestDictionary } from '@sensoro/core';
+import { useCoreState, useRequestDictionary, App } from '@sensoro/core';
 
 
 const Dictionary: React.FC = ({ keys, children }) => {
@@ -20,7 +20,9 @@ export default (props) => {
     <>
       {running && (
         <Dictionary keys={${dictionary}}>
-          {children}
+          <App>
+            {children}
+          </App>
         </Dictionary>
       )}
     </>
