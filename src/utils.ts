@@ -20,7 +20,7 @@ export default (props) => {
     <>
       {running && (
         <Dictionary keys={${dictionary}}>
-          <App ...{rest}>
+          <App {...rest}>
             {children}
           </App>
         </Dictionary>
