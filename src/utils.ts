@@ -14,13 +14,13 @@ const Dictionary: React.FC = ({ keys, children }) => {
 }
 
 export default (props) => {
-  const {children} = props;
+  const {children, ...rest} = props;
   const running = useCoreState();
   return (
     <>
       {running && (
         <Dictionary keys={${dictionary}}>
-          <App>
+          <App ...{rest}>
             {children}
           </App>
         </Dictionary>
