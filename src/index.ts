@@ -53,31 +53,8 @@ export default function(api: IApi) {
     qiankun = { master: {} },
     dynamicImport,
     publicPath,
-    base,
   } = api.userConfig;
   const { disable, dictionary = [], disableLoading = false } = core;
-
-  function attachPackageInfo() {
-    if (base && base.length > 0 && api?.paths?.cwd) {
-      const moduleName = base.split('/').join('');
-      api.addHTMLHeadScripts(() => {
-        return [
-          {
-            content: `
-              if(!window.globalThis.__package_info__){
-                window.globalThis.__package_info__ = {};
-              }
-              window.globalThis.__package_info__.${moduleName} = ${JSON.stringify(
-              require(join(api.paths.cwd as string, 'package.json')),
-            )}
-            `,
-          },
-        ];
-      });
-    }
-  }
-
-  attachPackageInfo();
 
   if (qiankun) {
     if (haveCorePackage() && !disable) {
