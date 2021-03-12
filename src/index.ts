@@ -54,7 +54,11 @@ export default function(api: IApi) {
     dynamicImport,
     publicPath,
   } = api.userConfig;
-  const { disable, dictionary = [], disableLoading = false } = core;
+  const {
+    disable,
+    dictionary = [],
+    disableLoading = false,
+  } = core;
 
   if (qiankun) {
     if (haveCorePackage() && !disable) {
