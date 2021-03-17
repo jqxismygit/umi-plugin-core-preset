@@ -5,9 +5,8 @@ export const qiankun = {
   async mount(props) {
     setTimeout(() => {
       props?.setAppLoading(false);
-    }, 1000);
+    }, 200);
   },
   async unmount(props) {
-    props?.setAppLoading(true);
   },
 };
